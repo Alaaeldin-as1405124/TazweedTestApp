@@ -11,7 +11,7 @@ export default class BaseService {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer "+await this.getToken(),
+                'Authorization': 'Bearer ' + await this.getToken(),
 
             },
         });
@@ -21,6 +21,41 @@ export default class BaseService {
         } else {
             return response.ok;
         }
+
+    }
+
+    static async addAppointment(appointment) {
+        const response = await fetch(`${WebApiBaseUrl}/appointments/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + await this.getToken(),
+
+            },
+            body: JSON.stringify(appointment),
+        });
+
+        return response.ok;
+
+
+    }
+
+    static async getMyAppointments() {
+        const response = await fetch(`${WebApiBaseUrl}/myAppointments/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + await this.getToken(),
+
+            }
+        });
+
+        if (response.ok) {
+            return await response.json();
+        } else {
+            return response.ok;
+        }
+
 
     }
 
@@ -50,11 +85,11 @@ export default class BaseService {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify(user),
         });
 
 
-        return authUser.ok
+        return authUser.ok;
     }
 
 }

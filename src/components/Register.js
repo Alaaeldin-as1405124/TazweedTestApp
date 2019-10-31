@@ -9,81 +9,63 @@ import {
 import colors from '../theme';
 import {Button} from 'react-native-elements';
 import baseService from '../services/baseService';
+import styles from '../styles';
+import Translation from '../../i18n';
 
 export default class Register extends React.Component {
-    static navigationOptions = {
-        title: 'Register',
-        headerTitleStyle: {
-            color: colors.barTitleColor,
-            fontSize: 20,
-            fontWeight: '400',
-        },
-        headerStyle: {
-            backgroundColor: colors.primary,
-        },
-    };
+
     state = {
         username: '',
         password: '',
+        type: 1,
     };
     onChange = (key, value) => {
         this.setState({[key]: value});
     };
 
-    register = async () =>{
-        if(this.state.username === '' || this.state.password === '')
-        {
-            alert('All fields are required');
+    register = async () => {
+        let {username, password} = this.state;
+        if (username === '' || password === '') {
+            alert(Translation.t('fieldsRequired'));
             return;
         }
+
         let result = await baseService.register({...this.state});
-        if(result){
-            alert('Registered successfully ');
-            this.props.navigation.navigate('Login',{...this.state});
-            this.setState({username:'',password:''})
+        if (result) {
+            alert(Translation.t('regDone'));
+            this.props.navigation.navigate('Login', {username, password});
+            this.setState({username: '', password: ''});
+        } else {
+            alert(Translation.t('regFail'));
         }
-        else{
-            alert('Failed to register')
-        }
-    }
+
+    };
+
     render() {
 
         return (
-            <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={styles.topContainer}>
                 <View style={{flex: 1}}>
-                    <Image source={require('../imgs/logo.png')} style={{alignSelf: 'center'}}/>
+                    <Image source={require('../imgs/logo.png')} style={styles.logoStyle}/>
                 </View>
-                <View style={{flex: 3, justifyContent: 'center', padding: 10}}>
+                <View style={styles.bottomContainer}>
 
                     <TextInput
-                        style={{
-                            height: 40,
-                            borderColor: 'gray',
-                            borderWidth: 1,
-                            margin: 5,
-                            padding: 5,
-                            borderRadius: 3,
-                        }}
+                        style={styles.inputStyle}
                         onChangeText={text => this.onChange('username', text)}
-                        placeholder={'Enter your username'}
+                        placeholder={Translation.t('username')}
                         value={this.state.username}
                     />
                     <TextInput
-                        style={{
-                            height: 40,
-                            borderColor: 'gray',
-                            borderWidth: 1,
-                            margin: 5,
-                            padding: 5,
-                            borderRadius: 3,
-                        }}
+                        style={styles.inputStyle}
                         onChangeText={text => this.onChange('password', text)}
-                        placeholder={'Enter your password'}
+                        placeholder={Translation.t('password')}
                         value={this.state.password}
                         secureTextEntry={true}
                     />
 
-                    <Button title="Register" onPress={() => this.register()}/>
+                    <Button title={Translation.t('register')} onPress={() => this.register()}
+                            buttonStyle={{backgroundColor: colors.buttonColor}}/>
 
 
                 </View>

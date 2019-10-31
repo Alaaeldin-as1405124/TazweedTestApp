@@ -12,7 +12,7 @@ export default class AuthLoadingScreen extends React.Component {
 
 
     authNavHandler = async () => {
-        //redirections
+        //redirection
         try {
             let token = await AsyncStorage.getItem('token');
             if (token) {

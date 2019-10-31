@@ -17,9 +17,9 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Appointments from './components/Appointments';
 import Sellers from './components/Sellers';
-import Seller from './components/Seller';
 import Booking from './components/Booking';
 import Translation from '../i18n/index'
+import Settings from './components/Settings';
 
 //stack navigator means multiple related screens can be navigated up or down as we want (Activities)
 
@@ -27,18 +27,11 @@ import Translation from '../i18n/index'
 const HomeStack = createStackNavigator({
 
         Home: {screen: Sellers},
-        Seller: {screen: Seller},
         Booking: {screen: Booking},
     }, {
         defaultNavigationOptions: ({navigation}) => ({
             headerTintColor: 'white',
-            title:Translation.t(navigation.state.routeName),
-            headerRightContainerStyle: {padding: 10},
-            headerTitleStyle: {
-                color: colors.barTitleColor,
-                fontSize: 20,
-                fontWeight: '400',
-            },
+            title:Translation.t(navigation.state.routeName.toString().toLowerCase()),
             headerStyle: {
                 backgroundColor: colors.primary,
             },
@@ -51,13 +44,21 @@ const AppointmentsStack = createStackNavigator({
     }, {
         defaultNavigationOptions: ({navigation}) => ({
             headerTintColor: 'white',
-            title:Translation.t(navigation.state.routeName),
-            headerRightContainerStyle: {padding: 10},
-            headerTitleStyle: {
-                color: colors.barTitleColor,
-                fontSize: 20,
-                fontWeight: '400',
+            title:Translation.t(navigation.state.routeName.toString().toLowerCase()),
+            headerStyle: {
+                backgroundColor: colors.primary,
             },
+        }),
+    },
+);
+
+const SettingsStack = createStackNavigator({
+
+        Settings: {screen: Settings},
+    }, {
+        defaultNavigationOptions: ({navigation}) => ({
+            headerTintColor: 'white',
+            title:Translation.t(navigation.state.routeName.toString().toLowerCase()),
             headerStyle: {
                 backgroundColor: colors.primary,
             },
@@ -74,7 +75,7 @@ const AuthStack = createStackNavigator({
         defaultNavigationOptions: ({navigation}) => ({
             headerTintColor: 'white',
             headerRightContainerStyle: {padding: 10},
-            title:Translation.t(navigation.state.routeName),
+            title:Translation.t(navigation.state.routeName.toString().toLowerCase()),
             headerTitleStyle: {
                 color: colors.barTitleColor,
                 fontSize: 20,
@@ -94,6 +95,7 @@ const AppStack = createBottomTabNavigator({
 
     Home: {screen: HomeStack},
     Appointments: {screen: AppointmentsStack},
+    Settings:{screen:SettingsStack}
 
 }, {
     activeColor: '#f0edf6',
@@ -129,13 +131,14 @@ const AppStack = createBottomTabNavigator({
         swipeEnabled: true, optimizationsEnabled: true,
         tabBarLabel:({focused, tintColor}) => {
             const {routeName} = navigation.state;
-            return <Text style={{color:'white',textAlign:'center'}}>{Translation.t(routeName)}</Text>
+            return <Text style={{color:'white',textAlign:'center'}}>{Translation.t(routeName.toString().toLowerCase())}</Text>
         },
 
 
     }),
     tabBarOptions: {
-        inactiveTintColor: 'gray',
+        inactiveTintColor: colors.inactiveBarIconColor,
+        activeTintColor:colors.activeBarIconColor,
         indicatorStyle: {backgroundColor: 'white'},
         showLabel: true,
         showIcon: true,
