@@ -1,9 +1,8 @@
 import React from 'react';
 import {
-    ActivityIndicator, Picker,
     Text,
     View,
-    StyleSheet, TouchableOpacity, TextInput, ScrollView,
+    StyleSheet, ScrollView,
 } from 'react-native';
 import {Button, Card, CheckBox} from 'react-native-elements';
 import {Caption} from 'react-native-paper';
@@ -70,7 +69,7 @@ export default class Booking extends React.Component {
         let result = await baseService.addAppointment(appointment);
         if (result) {
             alert(Translation.t('bookingDone'));
-            this.props.navigation.navigate('Appointments');
+            this.props.navigation.navigate('Appointments',{appointment});
         } else {
             alert(Translation.t("bookingFail"));
             //report the issue to the server or something
@@ -109,7 +108,7 @@ export default class Booking extends React.Component {
                         <Caption>{Translation.t('selectTime')}</Caption>
                         {seller.timeSlots.map((singleTimeSlot, index) => {
                             return (
-                                <View>
+                                <View key={index}>
                                     <CheckBox
                                         title={this.getTimeFormatFromTimeSlot(singleTimeSlot)}
                                         checkedColor={colors.buttonColor}

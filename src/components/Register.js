@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-    ActivityIndicator,
-    Text,
     View,
     Image,
     TextInput, ScrollView,

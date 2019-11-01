@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 
+//common style
 const styles = StyleSheet.create({
     inputStyle: {
         height: 50,

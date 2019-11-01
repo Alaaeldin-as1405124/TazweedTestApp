@@ -40,11 +40,6 @@ export default class Appointments extends React.Component {
         this.fetchAppointments();
     }
 
-    componentWillReceiveProps(nextProps: Readonly<P>, nextContext: any): void {
-        //after booking the appointment
-        this.fetchAppointments();
-    }
-
     componentDidMount(): void {
         this.props.navigation.setParams({filter: this.filter});
     }
@@ -89,10 +84,10 @@ export default class Appointments extends React.Component {
             appointments = appointments.filter((singleAppointment) => singleAppointment.status === this.state.filterOptions[index]);
         } else if (index === 4) {
             //Past if the appointment date is smaller than today's date
-            appointments = appointments.filter((singleAppointment) => Date.parse(singleAppointment.appointmentDate)-Date.parse(new Date().toDateString())<0);
+            appointments = appointments.filter((singleAppointment) => Date.parse(singleAppointment.appointmentDate) - Date.parse(new Date().toDateString()) < 0);
         } else if (index === 5) {
             //Coming if the appointment date is greater than today's date
-            appointments = appointments.filter((singleAppointment) => Date.parse(singleAppointment.appointmentDate)-Date.parse(new Date().toDateString())>=0);
+            appointments = appointments.filter((singleAppointment) => Date.parse(singleAppointment.appointmentDate) - Date.parse(new Date().toDateString()) >= 0);
         } else if (index === 6) {
             //Today's appointments
             console.log('todays date ');
@@ -112,11 +107,12 @@ export default class Appointments extends React.Component {
 
                     {this.state.filterOptions.map((singleOption, index) => {
                         return (
-                            <ListItem title={Translation.t(singleOption.toLowerCase())}
-                                      rightIcon={this.state.filterCheckedIndex === index &&
-                                      <Icon style={{padding: 5}} name="check-circle" size={20}
-                                            color={colors.buttonColor}/>}
-                                      onPress={() => this.filterAppointments(index)}
+                            <ListItem
+                                key={index}
+                                title={Translation.t(singleOption.toLowerCase())}
+                                rightIcon={this.state.filterCheckedIndex === index &&
+                                <Icon style={{padding: 5}} name="check-circle" size={20} color={colors.buttonColor}/>}
+                                onPress={() => this.filterAppointments(index)}
                             />
 
 
@@ -130,7 +126,8 @@ export default class Appointments extends React.Component {
     };
 
     render() {
-        console.log('the apo', this.state.appointmentsFiltered);
+        //we need to subscribe to this event, so we make sure that we handle the new added appointments when coming back from booking
+        const didBlurSubscription = this.props.navigation.addListener('didFocus', payload => {this.fetchAppointments()});
         if (this.state.loading) {
             return (
                 <Loading/>
