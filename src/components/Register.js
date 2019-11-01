@@ -4,13 +4,14 @@ import {
     Text,
     View,
     Image,
-    TextInput,
+    TextInput, ScrollView,
 } from 'react-native';
 import colors from '../theme';
 import {Button} from 'react-native-elements';
 import baseService from '../services/baseService';
 import styles from '../styles';
 import Translation from '../../i18n';
+import LoadingPrompt from './LoadingPrompt';
 
 export default class Register extends React.Component {
 
@@ -18,6 +19,7 @@ export default class Register extends React.Component {
         username: '',
         password: '',
         type: 1,
+        showLoading:false
     };
     onChange = (key, value) => {
         this.setState({[key]: value});
@@ -29,7 +31,7 @@ export default class Register extends React.Component {
             alert(Translation.t('fieldsRequired'));
             return;
         }
-
+        this.setState({showLoading:true});
         let result = await baseService.register({...this.state});
         if (result) {
             alert(Translation.t('regDone'));
@@ -38,18 +40,20 @@ export default class Register extends React.Component {
         } else {
             alert(Translation.t('regFail'));
         }
-
+        this.setState({showLoading:false});
     };
 
     render() {
 
         return (
-            <View style={styles.topContainer}>
+            <ScrollView style={styles.topContainer}>
+
+
                 <View style={{flex: 1}}>
                     <Image source={require('../imgs/logo.png')} style={styles.logoStyle}/>
                 </View>
                 <View style={styles.bottomContainer}>
-
+                    <LoadingPrompt show={this.state.showLoading}/>
                     <TextInput
                         style={styles.inputStyle}
                         onChangeText={text => this.onChange('username', text)}
@@ -69,7 +73,7 @@ export default class Register extends React.Component {
 
 
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 }

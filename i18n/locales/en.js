@@ -26,6 +26,16 @@ export default {
     bookingDone:"Booked your appointment successfully, please wait for seller to accept your appointment",
     notFound:'Sorry there is no',
     result:'result',
-    sellersText:'sellers'
+    sellersText:'sellers',
+    all:'All appointments',
+    pending:'Pending appointments',
+    accepted:'Accepted appointments',
+    rejected:'Rejected appointments',
+    past:'Past appointments',
+    comings:'Comings appointments',
+    today:"Today's appointments",
+    appointmentsText:'appointments',
+    loading:"Loading, please wait",
+    noTimeSlots:"Sorry this seller doesn't have available time slots yet",
 
 };

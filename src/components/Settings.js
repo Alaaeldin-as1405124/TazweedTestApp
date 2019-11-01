@@ -8,7 +8,8 @@ import {
 import {Button, ListItem} from 'react-native-elements';
 import Translation from '../../i18n';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import colors from '../theme'
+import colors from '../theme';
+
 export default class Settings extends React.Component {
     state = {
         modal: false,
@@ -19,12 +20,16 @@ export default class Settings extends React.Component {
     };
     changeLanguage = async (lang) => {
         Translation.locale = lang;
-
-        //console.log('Language changed it was ' + this.props.screenProps.locale);
         this.props.screenProps.setLocale(lang);
-        //console.log(this.props.screenProps);
         this.setState({modal: false});
     };
+
+    componentWillUnmount(): void {
+        //force close the modal if it's open before leaving
+        if (this.state.modal) {
+            this.setState({modal: false});
+        }
+    }
 
     render() {
         return (
@@ -66,7 +71,8 @@ export default class Settings extends React.Component {
                 />
 
 
-                <Button title={Translation.t('logout')} onPress={() => this.logout()} buttonStyle={{backgroundColor:colors.buttonColor}}/>
+                <Button title={Translation.t('logout')} onPress={() => this.logout()}
+                        buttonStyle={{backgroundColor: colors.buttonColor}}/>
             </View>
         );
     }

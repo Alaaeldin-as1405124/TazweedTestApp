@@ -38,9 +38,13 @@ export default class Booking extends React.Component {
     };
 
 
+    componentWillUnmount(): void {
+        this.setState({show:false})
+    }
+
     renderDateModal = () => {
         return (
-            <Modal isVisible={this.state.show} animationType="slide" hasBackdrop={true} coverScreen={false}>
+            <Modal isVisible={this.state.show} animationType="slide" hasBackdrop={true} coverScreen={true}>
                 <View style={styles.modalContent}>
                     <CalendarPicker
                         minDate={moment()}
@@ -82,7 +86,7 @@ export default class Booking extends React.Component {
         if(seller.timeSlots.length ===0){
             return(
                 <View style={styles.centeredContainer}>
-                    <Text style={{color: 'black'}}>Sorry this seller doesn't have available time slots yet</Text>
+                    <Text style={{color: 'black'}}>{Translation.t('noTimeSlots')}</Text>
                 </View>
             )
         }

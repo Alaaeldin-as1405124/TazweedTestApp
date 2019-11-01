@@ -4,13 +4,14 @@ import {
     View,
     Image,
     TextInput,
-    AsyncStorage, TouchableOpacity,
+    AsyncStorage, TouchableOpacity, ScrollView,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import colors from '../theme';
 import baseService from '../services/baseService';
 import styles from '../styles';
 import Translation from '../../i18n';
+import LoadingPrompt from './LoadingPrompt';
 
 export default class Login extends React.Component {
 
@@ -29,6 +30,7 @@ export default class Login extends React.Component {
             alert(Translation.t('fieldsRequired'));
             return;
         }
+        this.setState({showLoading:true});
         let result = await baseService.login({...this.state});
         if (result) {
             //we need to save the token to local storage
@@ -37,6 +39,7 @@ export default class Login extends React.Component {
         } else {
             alert(Translation.t('wrongCred'));
         }
+        this.setState({showLoading:false});
     };
 
     moveToRegister = () => {
@@ -53,12 +56,12 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <View style={styles.topContainer}>
+            <ScrollView style={styles.topContainer}>
                 <View style={{flex: 1}}>
                     <Image source={require('../imgs/logo.png')} style={styles.logoStyle}/>
                 </View>
                 <View style={styles.bottomContainer}>
-
+                    <LoadingPrompt show={this.state.showLoading}/>
                     <TextInput
                         style={styles.inputStyle}
                         onChangeText={text => this.onChange('username', text)}
@@ -81,7 +84,7 @@ export default class Login extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-            </View>
+            </ScrollView>
         );
     }
 }

@@ -8,14 +8,15 @@ const styles = StyleSheet.create({
         margin: 5,
         padding: 5,
         borderRadius: 3,
+        textAlign:'left'
     },
     topContainer:{
         flex: 1,
-        justifyContent: 'center'
     },
     bottomContainer: {
         flex: 3,
         justifyContent: 'center',
+        alignContent:'flex-start',
         padding: 10,
     },
     logoStyle:{

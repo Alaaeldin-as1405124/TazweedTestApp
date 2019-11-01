@@ -31,23 +31,32 @@ export default class Appointments extends React.Component {
         appointmentsFiltered: [],
         loading: true,
         filterModal: false,
-        filterOptions: ['All', 'Pending', 'Accepted', 'Rejected', 'Past', 'Comings'],
+        filterOptions: ['All', 'Pending', 'Accepted', 'Rejected', 'Past', 'Comings', 'Today'],
         filterCheckedIndex: 0,
     };
 
     componentWillMount(): void {
-        baseService.getMyAppointments()
-            .then((appointments) => this.setState({appointments, appointmentsFiltered: appointments, loading: false}))
-            .catch((err) => {
-                console.log(err);
-                this.setState({loading: false});
-            });
+        //when component get loaded
+        this.fetchAppointments();
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<P>, nextContext: any): void {
+        //after booking the appointment
+        this.fetchAppointments();
     }
 
     componentDidMount(): void {
         this.props.navigation.setParams({filter: this.filter});
     }
 
+    fetchAppointments = () => {
+        baseService.getMyAppointments()
+            .then((appointments) => this.setState({appointments, appointmentsFiltered: appointments, loading: false}))
+            .catch((err) => {
+                console.log(err);
+                this.setState({loading: false});
+            });
+    };
     filter = () => {
         this.setState({filterModal: true});
     };
@@ -71,20 +80,39 @@ export default class Appointments extends React.Component {
     };
 
     filterAppointments = (index) => {
+        //keep the state sync with the selected index
+        this.setState({filterCheckedIndex: index});
+        let appointments = [...this.state.appointments];
         //filter by condition
+        if (index === 1 || index === 2 || index === 3) {
+            //pending or accepted or rejected
+            appointments = appointments.filter((singleAppointment) => singleAppointment.status === this.state.filterOptions[index]);
+        } else if (index === 4) {
+            //Past if the appointment date is smaller than today's date
+            appointments = appointments.filter((singleAppointment) => Date.parse(singleAppointment.appointmentDate)-Date.parse(new Date().toDateString())<0);
+        } else if (index === 5) {
+            //Coming if the appointment date is greater than today's date
+            appointments = appointments.filter((singleAppointment) => Date.parse(singleAppointment.appointmentDate)-Date.parse(new Date().toDateString())>=0);
+        } else if (index === 6) {
+            //Today's appointments
+            console.log('todays date ');
+            appointments = appointments.filter((singleAppointment) => singleAppointment.appointmentDate === new Date().toDateString());
+        }
+        //by default it's all if no conditions matched and hide the filter modal
+        this.setState({appointmentsFiltered: appointments, filterModal: false});
     };
 
     renderFilterModal = () => {
         return (
             <Modal isVisible={this.state.filterModal} hasBackdrop={true} coverScreen={false}
-                   style={{flex: 0, justifyContent: 'center'}}
+                   style={{justifyContent: 'center'}}
                    onBackdropPress={() => this.setState({filterModal: false})}>
                 <ScrollView>
                     <ListItem title={Translation.t('selectFilter')} bottomDivider titleStyle={{alignSelf: 'center'}}/>
 
                     {this.state.filterOptions.map((singleOption, index) => {
                         return (
-                            <ListItem title={Translation.t(singleOption)}
+                            <ListItem title={Translation.t(singleOption.toLowerCase())}
                                       rightIcon={this.state.filterCheckedIndex === index &&
                                       <Icon style={{padding: 5}} name="check-circle" size={20}
                                             color={colors.buttonColor}/>}
@@ -169,8 +197,10 @@ export default class Appointments extends React.Component {
                                 </Card>
                             </View>
                         );
-                    }) : <Empty text={Translation.t('appointments')}/>}
+                    }) : <Empty text={Translation.t('appointmentsText')}/>}
                 </ScrollView>
+
+
             </View>
         );
     }
