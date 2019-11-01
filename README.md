@@ -11,6 +11,13 @@
   - Filter My Appointments
   - Ability to switch the language
   
+ # Run config
+ //assuming that you're running the api locally, if not please change API IP @src/services/base-service.js
+ //start the react-native server
+  - react-native start
+ //run on ios/android
+  - react-native run-ios
+  - react-native run-android
  # API Used
   
   https://github.com/Alaaeldin-as1405124/TazweedTestApi
